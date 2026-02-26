@@ -70,7 +70,7 @@ function escapePodPlugin(): Plugin {
   }
 }
 
-export default defineConfig(({ command }) => ({
+export default defineConfig(() => ({
   base: '/',
   plugins: [react(), cspPlugin(), escapePodPlugin()],
   define: {
