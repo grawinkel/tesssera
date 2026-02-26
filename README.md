@@ -23,13 +23,13 @@ Free, open-source [Shamir Secret Sharing](https://en.wikipedia.org/wiki/Shamir%2
 ## Quick Start
 
 ```bash
-git clone https://github.com/gwkline/TESSSERA.git
-cd TESSSERA
+git clone https://github.com/grawinkel/tesssera.git
+cd tesssera
 npm ci
 npm run dev
 ```
 
-Open http://localhost:5173/TESSSERA/
+Open http://localhost:5173/
 
 ## Build
 
@@ -67,8 +67,8 @@ To verify a deployed build matches source:
 1. Note the commit hash shown in the app's **Audit** tab (or from the deployed `BUILD_MANIFEST.json`)
 2. Clone and check out that exact commit:
    ```bash
-   git clone https://github.com/gwkline/TESSSERA.git
-   cd TESSSERA
+   git clone https://github.com/grawinkel/tesssera.git
+   cd tesssera
    git checkout <commit-hash>
    ```
 3. Build:

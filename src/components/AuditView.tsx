@@ -123,7 +123,7 @@ export function AuditView() {
             <tr>
               <td>Source Code</td>
               <td>
-                <code>github.com/gwkline/TESSSERA</code>
+                <code>github.com/grawinkel/tesssera</code>
               </td>
             </tr>
           </tbody>
@@ -187,7 +187,7 @@ export function AuditView() {
         <ol className="verify-steps">
           <li>
             Clone the repository:
-            <pre><code>git clone https://github.com/gwkline/TESSSERA.git</code></pre>
+            <pre><code>git clone https://github.com/grawinkel/tesssera.git</code></pre>
           </li>
           <li>
             Check out the exact commit:

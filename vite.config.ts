@@ -71,7 +71,7 @@ function escapePodPlugin(): Plugin {
 }
 
 export default defineConfig(({ command }) => ({
-  base: command === 'serve' ? '/' : '/TESSSERA/',
+  base: '/',
   plugins: [react(), cspPlugin(), escapePodPlugin()],
   define: {
     '__BUILD_COMMIT__': JSON.stringify(getGitCommit()),

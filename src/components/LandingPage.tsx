@@ -348,8 +348,8 @@ export function LandingPage() {
 
         <div className="code-snippet">
           <code>
-            git clone https://github.com/gwkline/TESSSERA.git{'\n'}
-            cd TESSSERA{'\n'}
+            git clone https://github.com/grawinkel/tesssera.git{'\n'}
+            cd tesssera{'\n'}
             npm ci{'\n'}
             npm run build{'\n'}
             # Compare dist/ against BUILD_MANIFEST.json hashes
@@ -391,7 +391,7 @@ export function LandingPage() {
           </a>
           <a
             className="cta-secondary"
-            href="https://github.com/gwkline/TESSSERA"
+            href="https://github.com/grawinkel/tesssera"
             target="_blank"
             rel="noopener noreferrer"
           >
