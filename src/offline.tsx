@@ -37,6 +37,7 @@ function OfflineApp() {
       <footer className="offline-footer">
         <p>This is a standalone recovery tool. It works without internet.</p>
         <p>All processing happens locally on this device.</p>
+        <p><a href="https://tesssera.z0id.net">tesssera.z0id.net</a></p>
       </footer>
     </div>
   );

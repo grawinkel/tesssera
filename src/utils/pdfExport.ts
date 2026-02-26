@@ -214,7 +214,7 @@ function buildPageContentStream(
   stream += 'BT\n';
   stream += `/F2 9 Tf\n`;
   stream += `${MARGIN} ${y} Td\n`;
-  stream += `(${pdfString('https://github.com/grawinkel/tesssera')}) Tj\n`;
+  stream += `(${pdfString('https://tesssera.z0id.net')}) Tj\n`;
   stream += 'ET\n';
 
   // --- Separator line ---

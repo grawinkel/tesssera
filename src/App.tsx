@@ -9,34 +9,16 @@ type Tab = 'secrets' | 'files' | 'audit';
 
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>('secrets');
-  const [bannerDismissed, setBannerDismissed] = useState(false);
 
   return (
     <div className="app">
       <header className="app-header">
-        <h1 className="app-logo">TE<span className="triple-s">SSS</span>ERA</h1>
+        <a href="https://tesssera.z0id.net" className="app-logo-link">
+          <h1 className="app-logo">TE<span className="triple-s">SSS</span>ERA</h1>
+        </a>
         <p className="tagline">Shamir Secret Sharing with QR Codes</p>
         <OfflineIndicator />
       </header>
-
-      {!bannerDismissed && (
-        <div className="intro-banner" role="banner">
-          <p>
-            Split a secret into pieces. No single piece reveals anything.
-            Combine enough pieces and the secret reappears.
-          </p>
-          <div className="intro-banner-actions">
-            <a href="./" className="intro-link">Learn more</a>
-            <button
-              className="intro-dismiss"
-              onClick={() => setBannerDismissed(true)}
-              aria-label="Dismiss introduction"
-            >
-              Got it
-            </button>
-          </div>
-        </div>
-      )}
 
       <nav className="tab-nav">
         <button
