@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
-
 declare const __BUILD_COMMIT__: string;
+declare const __VENDOR_HASHES__: Record<string, string>;
 
 interface VendorInfo {
   readonly name: string;
@@ -27,77 +26,7 @@ const VENDORS: readonly VendorInfo[] = [
   },
 ];
 
-async function computeHash(text: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(text);
-  const buffer = await crypto.subtle.digest('SHA-256', data);
-  const array = Array.from(new Uint8Array(buffer));
-  return array.map((b) => b.toString(16).padStart(2, '0')).join('');
-}
-
-interface FileHash {
-  readonly file: string;
-  readonly hash: string;
-}
-
 export function AuditView() {
-  const [fileHashes, setFileHashes] = useState<readonly FileHash[]>([]);
-  const [isComputing, setIsComputing] = useState(false);
-
-  const handleComputeHashes = async () => {
-    setIsComputing(true);
-    try {
-      const results: FileHash[] = [];
-      for (const vendor of VENDORS) {
-        try {
-          // Fetch the vendored source file from the build output
-          const response = await fetch(`./vendor-sources/${vendor.file}`);
-          if (response.ok) {
-            const text = await response.text();
-            const hash = await computeHash(text);
-            results.push({ file: vendor.file, hash });
-          } else {
-            results.push({ file: vendor.file, hash: 'file not found in build' });
-          }
-        } catch {
-          results.push({ file: vendor.file, hash: 'unable to fetch' });
-        }
-      }
-      setFileHashes(results);
-    } finally {
-      setIsComputing(false);
-    }
-  };
-
-  // Compute hashes on mount
-  useEffect(() => {
-    handleComputeHashes();
-  }, []);
-
-  const handleDownloadEscapePod = async () => {
-    setDownloadError(null);
-    try {
-      const response = await fetch('./tesssera_recovery.html');
-      if (!response.ok) {
-        setDownloadError('Escape pod not available in this build');
-        return;
-      }
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'tesssera_recovery.html';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch {
-      setDownloadError('Escape pod not available in this build');
-    }
-  };
-
-  const [downloadError, setDownloadError] = useState<string | null>(null);
-
   return (
     <div className="audit-view">
       <h2>Build Verification</h2>
@@ -159,27 +88,26 @@ export function AuditView() {
       </section>
 
       <section className="audit-section">
-        <h3>Runtime File Hashes (SHA-256)</h3>
-        {isComputing ? (
-          <p>Computing hashes...</p>
-        ) : (
-          <table className="audit-table">
-            <thead>
-              <tr>
-                <th>File</th>
-                <th>SHA-256</th>
+        <h3>Vendor File Hashes (SHA-256)</h3>
+        <p className="audit-description">
+          Pre-computed at build time from the vendored source files.
+        </p>
+        <table className="audit-table">
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>SHA-256</th>
+            </tr>
+          </thead>
+          <tbody>
+            {VENDORS.map((v) => (
+              <tr key={v.file}>
+                <td><code>{v.file}</code></td>
+                <td><code className="hash">{__VENDOR_HASHES__[v.file] ?? 'unknown'}</code></td>
               </tr>
-            </thead>
-            <tbody>
-              {fileHashes.map((fh) => (
-                <tr key={fh.file}>
-                  <td><code>{fh.file}</code></td>
-                  <td><code className="hash">{fh.hash}</code></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+            ))}
+          </tbody>
+        </table>
       </section>
 
       <section className="audit-section">
@@ -209,10 +137,9 @@ export function AuditView() {
           A single HTML file containing the complete recovery tool.
           Works offline forever from any device — no internet required.
         </p>
-        <button className="btn primary" onClick={handleDownloadEscapePod}>
+        <a className="btn primary" href="./tesssera_recovery.html" download="tesssera_recovery.html">
           Download Escape Pod
-        </button>
-        {downloadError && <div className="error-message">{downloadError}</div>}
+        </a>
       </section>
     </div>
   );

@@ -1,9 +1,27 @@
 /// <reference types="vitest/config" />
 import { resolve } from 'node:path'
 import { readFileSync, existsSync } from 'node:fs'
+import { createHash } from 'node:crypto'
 import { defineConfig, type Plugin } from 'vite'
 import { execFileSync } from 'node:child_process'
 import react from '@vitejs/plugin-react'
+
+function getVendorHashes(): Record<string, string> {
+  const files: Record<string, string> = {
+    'secrets/shamir.ts': resolve(__dirname, 'src/vendor/secrets/shamir.ts'),
+    'qrcode/qrcode-esm.js': resolve(__dirname, 'src/vendor/qrcode/qrcode-esm.js'),
+  }
+  const hashes: Record<string, string> = {}
+  for (const [key, filePath] of Object.entries(files)) {
+    try {
+      const content = readFileSync(filePath)
+      hashes[key] = createHash('sha256').update(content).digest('hex')
+    } catch {
+      hashes[key] = 'file not found'
+    }
+  }
+  return hashes
+}
 
 function getGitCommit(): string {
   try {
@@ -75,6 +93,7 @@ export default defineConfig(() => ({
   plugins: [react(), cspPlugin(), escapePodPlugin()],
   define: {
     '__BUILD_COMMIT__': JSON.stringify(getGitCommit()),
+    '__VENDOR_HASHES__': JSON.stringify(getVendorHashes()),
   },
   build: {
     rollupOptions: {
