@@ -98,7 +98,7 @@ export function Features() {
       <h2>What you get</h2>
       <p>
         Split text or files. Export as QR codes, PDFs, text, or self-contained HTML recovery tools.
-        Configure 2\u201310 shares, threshold from 2 to total, with an optional 250-character description.
+        Configure 2&ndash;10 shares, threshold from 2 to total, with an optional 250-character description.
       </p>
       <div className="feature-grid">
         {FEATURES.map((f) => (

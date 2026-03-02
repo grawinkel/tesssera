@@ -1,6 +1,6 @@
 import '../styles/landing.css';
 import { Hero } from './landing/Hero';
-import { FlowPlayground } from './landing/FlowPlayground';
+import { HowItWorks } from './landing/HowItWorks';
 import { Features } from './landing/Features';
 import { TrustPillars } from './landing/TrustPillars';
 import { UseCases } from './landing/UseCases';
@@ -12,7 +12,7 @@ export function LandingPage() {
     <div className="landing">
       <Hero />
       <hr className="section-divider" />
-      <FlowPlayground />
+      <HowItWorks />
       <hr className="section-divider" />
       <Features />
       <hr className="section-divider" />
