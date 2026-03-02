@@ -19,11 +19,16 @@ interface ScannerProps {
   isActive: boolean;
 }
 
+const SCAN_COOLDOWN_MS = 1500;
+
 export function Scanner({ onScan, onError, isActive }: ScannerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const rafRef = useRef<number>(0);
+  const lastScannedRef = useRef<string>('');
+  const cooldownRef = useRef(false);
+  const cooldownTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
 
   const stopCamera = useCallback(() => {
@@ -31,6 +36,12 @@ export function Scanner({ onScan, onError, isActive }: ScannerProps) {
       cancelAnimationFrame(rafRef.current);
       rafRef.current = 0;
     }
+    if (cooldownTimerRef.current) {
+      clearTimeout(cooldownTimerRef.current);
+      cooldownTimerRef.current = null;
+    }
+    cooldownRef.current = false;
+    lastScannedRef.current = '';
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((t) => t.stop());
       streamRef.current = null;
@@ -82,17 +93,31 @@ export function Scanner({ onScan, onError, isActive }: ScannerProps) {
           ctx.drawImage(video, 0, 0);
 
           try {
+            let scannedValue: string | null = null;
+
             if (detector) {
               const codes = await detector.detect(canvas);
-              if (codes.length > 0 && !cancelled) {
-                onScan(codes[0]!.rawValue);
+              if (codes.length > 0) {
+                scannedValue = codes[0]!.rawValue;
               }
             } else {
               const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-              const result = decodeQRFromImageData(imageData);
-              if (result && !cancelled) {
-                onScan(result);
-              }
+              scannedValue = decodeQRFromImageData(imageData);
+            }
+
+            if (
+              scannedValue &&
+              !cancelled &&
+              !cooldownRef.current &&
+              scannedValue !== lastScannedRef.current
+            ) {
+              lastScannedRef.current = scannedValue;
+              cooldownRef.current = true;
+              cooldownTimerRef.current = setTimeout(() => {
+                cooldownRef.current = false;
+                cooldownTimerRef.current = null;
+              }, SCAN_COOLDOWN_MS);
+              onScan(scannedValue);
             }
           } catch {
             // Frame decode failed, continue scanning

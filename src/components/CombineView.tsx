@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { Scanner } from './Scanner';
 import { ImageScanner } from './ImageScanner';
 import { combineShares, decodeShare, isValidShare } from '../utils/crypto';
@@ -15,6 +15,7 @@ export function CombineView() {
   const [manualInput, setManualInput] = useState('');
   const [isDragOver, setIsDragOver] = useState(false);
   const [copiedSecret, setCopiedSecret] = useState(false);
+  const sharesRef = useRef<string[]>([]);
 
   const threshold = shares.length > 0
     ? decodeShare(shares[0]).threshold
@@ -28,13 +29,13 @@ export function CombineView() {
       return false;
     }
 
-    if (shares.includes(trimmed)) {
+    if (sharesRef.current.includes(trimmed)) {
       setError('This share was already added');
       return false;
     }
 
-    if (shares.length > 0) {
-      const existingMeta = decodeShare(shares[0]);
+    if (sharesRef.current.length > 0) {
+      const existingMeta = decodeShare(sharesRef.current[0]);
       const newMeta = decodeShare(trimmed);
       if (existingMeta.total !== newMeta.total || existingMeta.threshold !== newMeta.threshold) {
         setError('This share belongs to a different secret (different threshold or total count)');
@@ -43,9 +44,10 @@ export function CombineView() {
     }
 
     setError(null);
-    setShares((prev) => [...prev, trimmed]);
+    sharesRef.current = [...sharesRef.current, trimmed];
+    setShares(sharesRef.current);
     return true;
-  }, [shares]);
+  }, []);
 
   const handleScan = useCallback((data: string) => {
     addShare(data);
@@ -58,7 +60,8 @@ export function CombineView() {
   };
 
   const handleRemoveShare = (index: number) => {
-    setShares((prev) => prev.filter((_, i) => i !== index));
+    sharesRef.current = sharesRef.current.filter((_, i) => i !== index);
+    setShares(sharesRef.current);
   };
 
   const handleCombine = async () => {
@@ -78,6 +81,7 @@ export function CombineView() {
         return;
       }
     }
+    sharesRef.current = [];
     setShares([]);
     setRevealedSecret(null);
     setError(null);
