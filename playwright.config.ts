@@ -8,7 +8,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'list',
   use: {
-    baseURL: 'http://localhost:5173/TESSSERA/',
+    baseURL: 'http://localhost:5173/',
     headless: true,
     trace: 'on-first-retry',
   },
