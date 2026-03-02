@@ -25,6 +25,15 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Test
+        run: make test
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E tests
+        run: make test-e2e
+
       - name: Build
         run: make build
         env:
