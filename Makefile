@@ -11,10 +11,10 @@ clean:
 dev:
 	npx vite
 
-test:
+test: install
 	npm test
 
-test-e2e:
+test-e2e: install
 	npx playwright test
 
 lint:
