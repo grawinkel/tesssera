@@ -17,7 +17,6 @@ Free, open-source [Shamir Secret Sharing](https://en.wikipedia.org/wiki/Shamir%2
 - PDF export of shares (per-share or all-at-once, zero-dependency PDF 1.4 serializer)
 - **Escape Pod** — single self-contained HTML file for offline recovery, works forever
 - **Audit tab** — build commit, vendored library hashes, reproduction instructions
-- PWA — installable, works offline via service worker
 - Print layout for paper backup
 
 ## Quick Start
@@ -140,7 +139,7 @@ src/
 │   ├── index.css
 │   └── offline.css
 ├── App.tsx                  # Split / Combine / Audit tabs
-├── main.tsx                 # Entry + service worker registration
+├── main.tsx                 # Entry point
 └── offline.tsx              # Escape Pod entry
 ```
 

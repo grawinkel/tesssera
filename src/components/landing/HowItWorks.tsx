@@ -5,7 +5,7 @@ const ACTIVE_SHARES = new Set([1, 3, 5]);
 
 function LockIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <rect x="3" y="11" width="18" height="11" rx="2" />
       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
     </svg>
@@ -14,7 +14,7 @@ function LockIcon() {
 
 function UnlockIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <rect x="3" y="11" width="18" height="11" rx="2" />
       <path d="M7 11V7a5 5 0 0 1 9.9-1" />
     </svg>
@@ -87,7 +87,7 @@ function CombinePanel() {
       </div>
 
       <div className="hiw-connector hiw-anim hiw-anim--6">
-        <svg viewBox="0 0 200 40" className="hiw-line-fan hiw-line-fan--converge" preserveAspectRatio="none">
+        <svg viewBox="0 0 200 40" className="hiw-line-fan" preserveAspectRatio="none">
           <line x1="20" y1="0" x2="100" y2="40" pathLength="100" className="hiw-line--active" />
           <line x1="60" y1="0" x2="100" y2="40" pathLength="100" className="hiw-line--dim" />
           <line x1="100" y1="0" x2="100" y2="40" pathLength="100" className="hiw-line--active" />

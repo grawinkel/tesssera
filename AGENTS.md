@@ -26,17 +26,34 @@ Free, open-source Shamir Secret Sharing with QR codes. Split secrets into shares
 ```
 src/
 ├── components/
-│   ├── SplitView.tsx       # Secret/file → QR codes + PDF export
-│   ├── CombineView.tsx     # QR codes → Secret/file (scan, upload, paste, drag-drop)
+│   ├── SecretsView.tsx     # Secrets tab (split + combine text secrets)
+│   ├── SplitView.tsx       # Text secret → QR codes + PDF export
+│   ├── CombineView.tsx     # QR codes → text secret (scan, upload, paste, drag-drop)
+│   ├── FilesView.tsx       # Files tab (split + combine files)
+│   ├── FileSplitView.tsx   # File → shares
+│   ├── FileCombineView.tsx # Shares → file
 │   ├── Scanner.tsx         # Camera QR scanner
 │   ├── ImageScanner.tsx    # File-upload QR decoder
 │   ├── ShareDisplay.tsx    # QR code grid
 │   ├── AuditView.tsx       # Build verification + dependency audit
 │   ├── OfflineRecovery.tsx # Text-only recovery (Escape Pod)
-│   └── OfflineIndicator.tsx
+│   ├── OfflineIndicator.tsx
+│   ├── LandingPage.tsx     # Marketing landing page
+│   └── landing/            # Landing page sub-components
+│       ├── Hero.tsx
+│       ├── TrustPillars.tsx
+│       ├── HowItWorks.tsx
+│       ├── Features.tsx
+│       ├── UseCases.tsx
+│       ├── NameExplainer.tsx
+│       ├── BottomCTA.tsx
+│       ├── constants.ts
+│       └── useScrollReveal.ts
 ├── utils/
 │   ├── crypto.ts           # Shamir split/combine
 │   ├── pdfExport.ts        # Minimal PDF 1.4 serializer (no deps)
+│   ├── pdfParse.ts         # PDF share extraction
+│   ├── escapePodExport.ts  # Escape Pod HTML generation
 │   ├── fileSplit.ts        # File → shares and shares → file
 │   └── qrDecode.ts         # BarcodeDetector + jsQR fallback
 ├── vendor/
@@ -47,9 +64,11 @@ src/
 │   └── useOffline.ts       # Network status
 ├── styles/
 │   ├── index.css           # Main app styles + print layout
+│   ├── landing.css         # Landing page styles
 │   └── offline.css         # Escape Pod styles
-├── App.tsx                 # Main app (Split / Combine / Audit tabs)
-├── main.tsx                # Entry + service worker registration
+├── App.tsx                 # Main app (Secrets / Files / Audit tabs)
+├── landing.tsx             # Landing page entry
+├── main.tsx                # Entry point
 └── offline.tsx             # Escape Pod entry
 ```
 
@@ -68,12 +87,11 @@ npm run test:e2e     # E2E tests (playwright)
 ## Features
 
 - **Split text secrets** into M-of-N Shamir shares with QR codes
-- **Split files** (up to 5MB) into text-based shares
+- **Split files** (up to 10 MB) into text-based shares
 - **Combine shares** via camera scan, image upload, text paste, or drag-and-drop
 - **PDF export** of all shares (one per page, QR + text, from-scratch serializer)
 - **Escape Pod** — single HTML file recovery tool, works offline forever
 - **Audit tab** — build commit, vendored file hashes, reproduction instructions
-- **PWA** — installable, works offline via service worker
 - **Print layout** — CSS @media print for paper backup
 
 ## Trust Infrastructure

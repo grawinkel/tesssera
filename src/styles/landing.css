@@ -383,10 +383,10 @@
   100% { box-shadow: 0 0 8px rgba(74, 222, 128, 0.12); }
 }
 
-/* Section-level reveal override: we handle visibility per-element */
+/* HiW uses its own per-element animation; no .reveal class applied */
 .hiw {
-  opacity: 1 !important;
-  transform: none !important;
+  opacity: 1;
+  transform: none;
 }
 
 .hiw h2 {
@@ -426,7 +426,6 @@
 }
 
 .hiw-label {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
