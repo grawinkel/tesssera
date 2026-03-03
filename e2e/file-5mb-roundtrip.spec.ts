@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { getShares, switchToCombine, switchToPasteMode } from './helpers'
+import { getFileShares, switchToFileCombine } from './helpers'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
@@ -28,30 +28,30 @@ test.describe('file split + combine roundtrip via web UI', () => {
     await page.goto('./tool.html')
 
     // --- SPLIT ---
-    await page.click('.mode-btn:has-text("File")')
+    await page.click('button.tab:has-text("Files")')
     await page.locator('#fileInput').setInputFiles(FIXTURE_PATH)
-    await page.fill('#totalShares', '3')
-    await page.fill('#threshold', '2')
+    await page.fill('#fileTotalShares', '3')
+    await page.fill('#fileThreshold', '2')
 
-    await page.click('button:has-text("Generate Shares")')
+    await page.click('button:has-text("Split File")')
     await expect(page.locator('.success-banner')).toBeVisible({ timeout: 120_000 })
 
-    const shares = await getShares(page)
+    const shares = await getFileShares(page)
     expect(shares).toHaveLength(3)
     console.log('Share lengths:', shares.map(s => s.length))
 
     // --- COMBINE shares[0] + shares[1] ---
-    await switchToCombine(page)
-    await switchToPasteMode(page)
+    await switchToFileCombine(page)
+    await page.click('.mode-btn:has-text("Paste Share Text")')
 
     // Use page.fill — Playwright handles large text correctly
-    await page.fill('#shareInput', shares[0]!)
+    await page.fill('#fileShareInput', shares[0]!)
     await page.click('button:has-text("Add Share")')
 
     // Verify first share was added
     await expect(page.locator('.share-item')).toHaveCount(1, { timeout: 5_000 })
 
-    await page.fill('#shareInput', shares[1]!)
+    await page.fill('#fileShareInput', shares[1]!)
     await page.click('button:has-text("Add Share")')
 
     // Verify second share was added
@@ -62,7 +62,7 @@ test.describe('file split + combine roundtrip via web UI', () => {
     console.log('Errors so far:', errors)
 
     const downloadPromise = page.waitForEvent('download', { timeout: 180_000 })
-    await page.click('button:has-text("Reveal Secret")')
+    await page.click('button:has-text("Reconstruct File")')
 
     // Take screenshot 5s after click to see state
     await page.waitForTimeout(5000)

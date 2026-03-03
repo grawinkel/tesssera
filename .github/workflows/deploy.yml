@@ -28,6 +28,9 @@ jobs:
       - name: Test
         run: make test
 
+      - name: Build Escape Pod (needed by E2E recovery tests)
+        run: npm run build:offline
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 

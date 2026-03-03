@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { getShares, switchToCombine, switchToPasteMode } from './helpers'
+import { getFileShares, switchToFileCombine } from './helpers'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
@@ -21,25 +21,26 @@ test.describe('64KB file split + combine roundtrip', () => {
     await page.goto('./tool.html')
 
     // --- SPLIT ---
-    await page.click('.mode-btn:has-text("File")')
+    await page.click('button.tab:has-text("Files")')
     await page.locator('#fileInput').setInputFiles(FIXTURE_PATH)
-    await page.fill('#totalShares', '3')
-    await page.fill('#threshold', '2')
+    await page.fill('#fileTotalShares', '3')
+    await page.fill('#fileThreshold', '2')
 
-    await page.click('button:has-text("Generate Shares")')
+    await page.click('button:has-text("Split File")')
     await expect(page.locator('.success-banner')).toBeVisible({ timeout: 60_000 })
     await expect(page.locator('.success-banner')).toContainText('random-64kb.bin')
 
-    const shares = await getShares(page)
+    const shares = await getFileShares(page)
     expect(shares).toHaveLength(3)
 
     // --- COMBINE each 2-share pair and verify hash ---
     const pairs: [number, number][] = [[0, 1], [0, 2], [1, 2]]
 
     for (const [a, b] of pairs) {
-      await switchToCombine(page)
+      await switchToFileCombine(page)
 
       // Reset any previous combine state
+      page.on('dialog', d => d.accept())
       const startOverBtn = page.locator('button:has-text("Start Over")')
       const resetBtn = page.locator('button:has-text("Reset")')
       if (await startOverBtn.isVisible({ timeout: 500 }).catch(() => false)) {
@@ -51,24 +52,24 @@ test.describe('64KB file split + combine roundtrip', () => {
       // Wait for reset to complete — share list should be empty
       await expect(page.locator('.share-item')).toHaveCount(0, { timeout: 5_000 })
 
-      await switchToPasteMode(page)
+      await page.click('.mode-btn:has-text("Paste Share Text")')
 
       // Wait for textarea to be ready
-      await expect(page.locator('#shareInput')).toBeVisible({ timeout: 5_000 })
+      await expect(page.locator('#fileShareInput')).toBeVisible({ timeout: 5_000 })
 
-      await page.fill('#shareInput', shares[a]!)
+      await page.fill('#fileShareInput', shares[a]!)
       await page.click('button:has-text("Add Share")')
       await expect(page.locator('.share-item')).toHaveCount(1, { timeout: 5_000 })
 
       // Wait for textarea to be cleared before filling next share
-      await expect(page.locator('#shareInput')).toHaveValue('', { timeout: 5_000 })
+      await expect(page.locator('#fileShareInput')).toHaveValue('', { timeout: 5_000 })
 
-      await page.fill('#shareInput', shares[b]!)
+      await page.fill('#fileShareInput', shares[b]!)
       await page.click('button:has-text("Add Share")')
       await expect(page.locator('.share-item')).toHaveCount(2, { timeout: 5_000 })
 
       const downloadPromise = page.waitForEvent('download', { timeout: 60_000 })
-      await page.click('button:has-text("Reveal Secret")')
+      await page.click('button:has-text("Reconstruct File")')
       const download = await downloadPromise
 
       expect(download.suggestedFilename()).toBe('random-64kb.bin')

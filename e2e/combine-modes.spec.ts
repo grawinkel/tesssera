@@ -4,7 +4,8 @@ import { splitSecret, getShares, switchToCombine, switchToPasteMode } from './he
 test.describe('Combine Input Modes', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('./tool.html')
-    await page.click('button.tab:has-text("Combine")')
+    await page.click('button.tab:has-text("Secrets")')
+    await page.click('button.sub-tab:has-text("Combine")')
   })
 
   test('default mode is Scan QR with Start Scanning button', async ({ page }) => {
@@ -18,8 +19,8 @@ test.describe('Combine Input Modes', () => {
     await expect(page.locator('text=Upload QR Image or PDF')).toBeVisible()
   })
 
-  test('Paste Key mode shows textarea', async ({ page }) => {
-    await page.click('.mode-btn:has-text("Paste Key")')
+  test('Paste Share Text mode shows textarea', async ({ page }) => {
+    await page.click('.mode-btn:has-text("Paste Share Text")')
     await expect(page.locator('#shareInput')).toBeVisible()
   })
 
@@ -27,7 +28,7 @@ test.describe('Combine Input Modes', () => {
     await context.grantPermissions(['clipboard-read', 'clipboard-write'])
 
     // Generate shares first
-    await page.click('button.tab:has-text("Split")')
+    await page.click('button.sub-tab:has-text("Split")')
     await splitSecret(page, 'mode test secret', { totalShares: 3, threshold: 2 })
     const shares = await getShares(page)
 
@@ -50,7 +51,7 @@ test.describe('Combine Input Modes', () => {
   test('remove button removes a specific share', async ({ context, page }) => {
     await context.grantPermissions(['clipboard-read', 'clipboard-write'])
 
-    await page.click('button.tab:has-text("Split")')
+    await page.click('button.sub-tab:has-text("Split")')
     await splitSecret(page, 'remove test', { totalShares: 3, threshold: 2 })
     const shares = await getShares(page)
 
@@ -71,7 +72,7 @@ test.describe('Combine Input Modes', () => {
   test('reset button clears all shares', async ({ context, page }) => {
     await context.grantPermissions(['clipboard-read', 'clipboard-write'])
 
-    await page.click('button.tab:has-text("Split")')
+    await page.click('button.sub-tab:has-text("Split")')
     await splitSecret(page, 'reset test', { totalShares: 3, threshold: 2 })
     const shares = await getShares(page)
 
@@ -82,6 +83,7 @@ test.describe('Combine Input Modes', () => {
     await page.click('button:has-text("Add Share")')
     await expect(page.locator('.share-item')).toHaveCount(1)
 
+    page.on('dialog', d => d.accept())
     await page.click('button:has-text("Reset")')
     await expect(page.locator('.share-item')).toHaveCount(0)
     await expect(page.locator('.progress-info')).toContainText('Add your first share')

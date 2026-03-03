@@ -7,8 +7,8 @@ test.describe('Input Validation & Errors', () => {
   })
 
   test('paste invalid text shows "Invalid share format"', async ({ page }) => {
-    await page.click('button.tab:has-text("Combine")')
-    await page.click('.mode-btn:has-text("Paste Key")')
+    await switchToCombine(page)
+    await page.click('.mode-btn:has-text("Paste Share Text")')
     await page.fill('#shareInput', 'this is not a valid share')
     await page.click('button:has-text("Add Share")')
 
@@ -23,6 +23,7 @@ test.describe('Input Validation & Errors', () => {
     const sharesA = await getShares(page)
 
     // Generate second set of shares
+    page.on('dialog', d => d.accept())
     await page.click('button:has-text("Start Over")')
     await splitSecret(page, 'secret B', { totalShares: 5, threshold: 3 })
     const sharesB = await getShares(page)

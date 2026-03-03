@@ -49,12 +49,12 @@ test.describe('Split and Combine Round-Trip (Main App)', () => {
 
     expect(shares.length).toBe(3)
 
-    // Switch to Combine tab
-    await page.click('button.tab:has-text("Combine")')
+    // Switch to Combine sub-tab
+    await page.click('button.sub-tab:has-text("Combine")')
     await expect(page.locator('.combine-view')).toBeVisible()
 
     // Switch to paste mode
-    await page.click('button.mode-btn:has-text("Paste Key")')
+    await page.click('button.mode-btn:has-text("Paste Share Text")')
 
     // Paste first share
     await page.fill('#shareInput', shares[0])
@@ -78,8 +78,8 @@ test.describe('Split and Combine Round-Trip (Main App)', () => {
 
     expect(shares.length).toBe(5)
 
-    await page.click('button.tab:has-text("Combine")')
-    await page.click('button.mode-btn:has-text("Paste Key")')
+    await page.click('button.sub-tab:has-text("Combine")')
+    await page.click('button.mode-btn:has-text("Paste Share Text")')
 
     // Use shares 0, 2, 4 (non-consecutive)
     for (const share of [shares[0], shares[2], shares[4]]) {
@@ -97,8 +97,8 @@ test.describe('Split and Combine Round-Trip (Main App)', () => {
     const secret = 'threshold-test'
     const shares = await splitSecretViaUI(page, secret, 3, 3)
 
-    await page.click('button.tab:has-text("Combine")')
-    await page.click('button.mode-btn:has-text("Paste Key")')
+    await page.click('button.sub-tab:has-text("Combine")')
+    await page.click('button.mode-btn:has-text("Paste Share Text")')
 
     // Add only 2 of 3 required shares
     await page.fill('#shareInput', shares[0])

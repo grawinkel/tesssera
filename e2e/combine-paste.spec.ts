@@ -48,6 +48,7 @@ test.describe('Combine via Text Paste', () => {
     await expect(page.locator('.revealed-secret pre')).toHaveText('pasta sauce recipe')
 
     // Start Over resets
+    page.on('dialog', d => d.accept())
     await page.click('button:has-text("Start Over")')
     await expect(page.locator('.progress-info')).toContainText('Add your first share')
   })

@@ -61,6 +61,7 @@ test.describe('Text Secret Splitting', () => {
     await page.click('button:has-text("Generate Shares")')
     await expect(page.locator('.success-banner')).toBeVisible()
 
+    page.on('dialog', d => d.accept())
     await page.click('button:has-text("Start Over")')
     await expect(page.locator('.success-banner')).not.toBeVisible()
     await expect(page.locator('#secret')).toBeVisible()

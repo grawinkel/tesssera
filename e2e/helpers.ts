@@ -13,8 +13,7 @@ export async function splitSecret(
 ): Promise<void> {
   const { totalShares = 5, threshold = 3, description } = opts
 
-  await page.click('button.tab:has-text("Split")')
-  await page.click('.mode-btn:has-text("Text")')
+  await page.click('button.tab:has-text("Secrets")')
 
   if (description) {
     await page.fill('#description', description)
@@ -44,11 +43,36 @@ export async function getShares(page: Page): Promise<string[]> {
 }
 
 export async function switchToCombine(page: Page): Promise<void> {
-  await page.click('button.tab:has-text("Combine")')
+  await page.click('button.tab:has-text("Secrets")')
+  await page.click('button.sub-tab:has-text("Combine")')
 }
 
 export async function switchToPasteMode(page: Page): Promise<void> {
-  await page.click('.mode-btn:has-text("Paste Key")')
+  await page.click('.mode-btn:has-text("Paste Share Text")')
+}
+
+export async function switchToFileSplit(page: Page): Promise<void> {
+  await page.click('button.tab:has-text("Files")')
+}
+
+export async function switchToFileCombine(page: Page): Promise<void> {
+  await page.click('button.tab:has-text("Files")')
+  await page.click('button.sub-tab:has-text("Combine")')
+}
+
+export async function getFileShares(page: Page): Promise<string[]> {
+  const shares: string[] = []
+  const items = page.locator('.file-share-list .share-item')
+  const count = await items.count()
+
+  for (let i = 0; i < count; i++) {
+    // Copy button is the last .btn-copy in each share item
+    await items.nth(i).locator('.btn-copy').last().click()
+    const text = await page.evaluate(() => navigator.clipboard.readText())
+    shares.push(text)
+  }
+
+  return shares
 }
 
 export async function pasteShare(page: Page, share: string): Promise<void> {

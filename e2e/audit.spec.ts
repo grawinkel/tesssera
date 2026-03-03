@@ -28,10 +28,10 @@ test.describe('Audit Tab', () => {
     await expect(page.locator('.verify-steps')).toBeVisible()
   })
 
-  test('shows Escape Pod section with download button', async ({ page }) => {
+  test('shows Escape Pod section with download link', async ({ page }) => {
     await expect(page.locator('h3:has-text("Escape Pod")')).toBeVisible()
     await expect(
-      page.locator('button:has-text("Download Escape Pod")'),
+      page.locator('a:has-text("Download Escape Pod")'),
     ).toBeVisible()
   })
 })
