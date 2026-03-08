@@ -591,6 +591,26 @@
   animation: hiw-fadein 0.5s ease forwards, hiw-glow 1.2s ease 1.1s forwards;
 }
 
+/* ===== Footer ===== */
+.landing-footer {
+  text-align: center;
+  padding: 2.5rem 1rem 2rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  border-top: 1px solid;
+  border-image: linear-gradient(90deg, transparent, var(--accent), transparent) 1;
+  margin-top: 1rem;
+}
+
+.landing-footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.landing-footer a:hover {
+  text-decoration: underline;
+}
+
 /* ===== Responsive ===== */
 @media (min-width: 520px) {
   .feature-grid {

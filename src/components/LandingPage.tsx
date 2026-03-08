@@ -6,6 +6,7 @@ import { TrustPillars } from './landing/TrustPillars';
 import { UseCases } from './landing/UseCases';
 import { NameExplainer } from './landing/NameExplainer';
 import { BottomCTA } from './landing/BottomCTA';
+import { Footer } from './landing/Footer';
 
 export function LandingPage() {
   return (
@@ -23,6 +24,7 @@ export function LandingPage() {
       <NameExplainer />
       <hr className="section-divider" />
       <BottomCTA />
+      <Footer />
     </div>
   );
 }
